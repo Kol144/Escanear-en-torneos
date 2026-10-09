@@ -11,10 +11,37 @@
 .login-gate{position:fixed;z-index:200;inset:0;display:grid;place-items:center;padding:22px;background:#f35b11 url("fondo-torneo.png") center/cover no-repeat}.login-card{width:min(100%,390px);padding:24px;border:1px solid #ffffffb8;border-radius:22px;background:#fffffff2;box-shadow:0 20px 60px #0003}.login-card h1{font-size:28px}.login-card p{margin:0 0 16px;color:#454545}.login-card input{width:100%;height:52px;padding:0 14px;border:1px solid #aaa;border-radius:12px;background:#fff}.login-error{min-height:22px;margin-top:8px;color:var(--error);font-size:13px}
 body{position:relative;isolation:isolate}body::before{content:"";position:fixed;z-index:-1;inset:-28%;pointer-events:none;background:radial-gradient(ellipse at 25% 28%,#ffb83377 0 13%,transparent 44%),radial-gradient(ellipse at 76% 64%,#ef321b66 0 16%,transparent 48%),radial-gradient(ellipse at 52% 10%,#ffe15a55 0 12%,transparent 43%);filter:blur(38px);animation:liquidFlow 17s ease-in-out infinite alternate}.login-gate::before{content:"";position:absolute;z-index:0;inset:-18%;pointer-events:none;background:radial-gradient(ellipse at 24% 32%,#ffbc3d66 0 14%,transparent 45%),radial-gradient(ellipse at 75% 62%,#e624185c 0 16%,transparent 48%);filter:blur(30px);animation:liquidFlow 17s ease-in-out infinite alternate}.login-card{position:relative;z-index:1}.login-card .motion-toggle{margin-top:10px}.menu-dropdown.open .menu-item{opacity:1;transform:translateY(0)}.menu-dropdown .menu-item{opacity:0;transform:translateY(-7px);transition:opacity .2s ease,transform .24s cubic-bezier(.2,.8,.2,1)}.menu-dropdown.open .menu-item:nth-child(1){transition-delay:.03s}.menu-dropdown.open .menu-item:nth-child(2){transition-delay:.12s}.menu-dropdown.open .menu-item:nth-child(3){transition-delay:.21s}.modal-backdrop{animation:backdropIn .2s ease-out both}.modal-backdrop.show .modal-card:not(.hidden){animation:modalBounceIn .48s cubic-bezier(.2,.9,.28,1.12) both}.scan-card.scanning::after{content:"";position:absolute;z-index:1;inset:-20%;pointer-events:none;background:#080808;opacity:.98;filter:blur(2px);transform:scaleX(.84);transform-origin:center;animation:smokeReveal 1.15s cubic-bezier(.2,.7,.24,1) forwards}.scan-card.scanning .scan-overlay{z-index:2}.success-flash{position:fixed;z-index:110;inset:0;pointer-events:none;background:#00ef43;opacity:0}.success-flash.play{animation:greenFlash .72s ease-out both}#recentRows tr.verified-row{background:#c7f3cf;animation:recentGlow 1.35s ease-out both}.typing-pop{animation:characterPop .15s cubic-bezier(.2,.8,.25,1)}@keyframes characterPop{0%{font-size:14px}100%{font-size:16px}}@keyframes liquidFlow{0%{transform:translate3d(-3%,0,0) scale(.96) rotate(0)}50%{transform:translate3d(2%,3%,0) scale(1.04) rotate(4deg)}100%{transform:translate3d(-1%,-2%,0) scale(1.02) rotate(-4deg)}}@keyframes backdropIn{from{opacity:0}to{opacity:1}}@keyframes modalBounceIn{0%{opacity:0;transform:translateY(70vh) scale(.96)}72%{opacity:1;transform:translateY(-7px) scale(1.01)}100%{opacity:1;transform:translateY(0) scale(1)}}@keyframes smokeReveal{0%{opacity:.98;transform:scaleX(.84);filter:blur(2px)}55%{opacity:.76;transform:scaleX(1.28);filter:blur(9px)}100%{opacity:0;transform:scaleX(2.5);filter:blur(24px)}}@keyframes greenFlash{0%{opacity:0}12%{opacity:.94}36%{opacity:.68}100%{opacity:0}}@keyframes recentGlow{0%{background:#21df50;box-shadow:inset 0 0 0 2px #10b43c}38%{background:#7bea8e;box-shadow:inset 0 0 0 1px #46c961}100%{background:#c7f3cf;box-shadow:inset 0 0 0 0 transparent}}.no-animations *, .no-animations *::before, .no-animations *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.no-animations::before,.no-animations .login-gate::before{display:none!important}
 body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);animation-duration:11s}.login-gate::before{opacity:.92;filter:blur(25px);animation-duration:11s}.shell{position:relative;z-index:1}@keyframes liquidFlow{0%{transform:translate3d(-8%,-5%,0) scale(.92) rotate(-7deg)}50%{transform:translate3d(5%,6%,0) scale(1.1) rotate(6deg)}100%{transform:translate3d(-4%,3%,0) scale(1.03) rotate(-4deg)}}
-</style>
+  body::after,.login-gate::after{content:"";position:fixed;z-index:0;inset:-45%;pointer-events:none;background:radial-gradient(ellipse 48% 29% at 26% 38%,#ffe56b88 0 30%,transparent 72%),radial-gradient(ellipse 48% 31% at 75% 63%,#ee241d77 0 30%,transparent 72%),linear-gradient(145deg,transparent 34%,#fff07a4d 44%,#ff5c164d 52%,transparent 62%);filter:blur(8px);mix-blend-mode:overlay;opacity:.72;animation:waveSurge 3.8s ease-in-out infinite alternate;will-change:transform}
+  .login-gate{isolation:isolate;overflow:hidden}
+  body::before{animation-duration:4.8s;filter:blur(18px)}.login-gate::before{animation-duration:4.8s;filter:blur(18px)}
+  @keyframes waveSurge{0%{transform:translate3d(-16%,-9%,0) rotate(-10deg) scale(.9)}50%{transform:translate3d(10%,8%,0) rotate(7deg) scale(1.12)}100%{transform:translate3d(-8%,13%,0) rotate(-8deg) scale(1.04)}}
+  .no-animations::after,.no-animations .login-gate::after{display:none!important}
+  .motion-toggle{position:relative;isolation:isolate;overflow:hidden;color:#fff!important;background:#f8fdff!important;border:1px solid #d6f6ff!important}
+  .motion-toggle span{position:relative;z-index:2;text-shadow:0 1px 3px #073b5dcc}
+  .motion-toggle::before{content:"";position:absolute;z-index:0;left:-20%;right:-20%;top:32%;height:90%;border-radius:46% 54% 0 0;background:linear-gradient(180deg,#45c8f5 0%,#0874b8 100%);animation:waterDrift 2.2s ease-in-out infinite alternate;will-change:transform}
+  .motion-toggle::after{content:"";position:absolute;z-index:1;left:-18%;top:24%;width:136%;height:34%;border-radius:50%;background:linear-gradient(180deg,#b1f2ff,#43c4f1);opacity:.9;filter:blur(2px);animation:waterSurface 1.55s ease-in-out infinite alternate;will-change:transform}
+  @keyframes waterDrift{0%{transform:translate3d(-11%,5%,0) rotate(-4deg)}100%{transform:translate3d(11%,-4%,0) rotate(4deg)}}
+  @keyframes waterSurface{0%{transform:translate3d(-8%,4%,0) scaleX(.98)}100%{transform:translate3d(9%,-4%,0) scaleX(1.04)}}
+  body.no-animations #animationToggle::before{animation:waterDrift 2.2s ease-in-out infinite alternate!important;animation-play-state:running!important}
+  body.no-animations #animationToggle::after{animation:waterSurface 1.55s ease-in-out infinite alternate!important;animation-play-state:running!important}
+  body.no-animations #animationToggle[data-water-frozen="true"]::before,body.no-animations #animationToggle[data-water-frozen="true"]::after{animation-play-state:paused!important}
+  .reset-button{border-color:#e0aaa4!important;color:#8b2118!important;background:#fff6f5!important}
+  .reset-footer{margin-top:24px;padding-top:16px;border-top:1px solid #ffffff9c}
+  .reset-confirm{position:fixed;z-index:300;inset:0;display:none;place-items:center;padding:20px;background:#111b;backdrop-filter:blur(7px)}
+  .reset-confirm.show{display:grid;animation:backdropIn .18s ease-out both}
+  .reset-card{width:min(100%,420px);padding:22px;border:1px solid #ffffffb8;border-radius:20px;background:#fffffff7;box-shadow:0 24px 80px #0005}
+  .reset-card h2{margin:0;font-size:22px;line-height:1.2}
+  .reset-card p{margin:10px 0 18px;color:#444}
+  .reset-warning{font-size:30px;line-height:1;margin-bottom:10px;color:#a52a20}
+  .reset-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .reset-actions button{min-height:48px;border-radius:12px;font-weight:700}
+  .cancel-reset{border:1px solid #ccc;background:#fff;color:#111}
+  .confirm-reset{border:0;background:#9d2525;color:#fff}
+  .login-reset-message{min-height:20px;margin-top:6px;color:var(--ok);font-size:12px}
+  </style>
 </head>
 <body>
-<section class="login-gate" id="loginGate" aria-labelledby="loginTitle"><form class="login-card" id="loginForm"><h1 id="loginTitle">Control del torneo</h1><p>Introduce la contraseña para entrar.</p><input id="passwordInput" type="password" autocomplete="current-password" placeholder="Contraseña" aria-label="Contraseña" required><button class="primary" type="submit">Entrar</button><button class="secondary motion-toggle" id="animationToggle" type="button" aria-pressed="true">Animaciones activadas</button><div class="login-error" id="loginError" role="alert" aria-live="polite"></div></form></section>
+<section class="login-gate" id="loginGate" aria-labelledby="loginTitle"><form class="login-card" id="loginForm"><h1 id="loginTitle">Control del torneo</h1><p>Introduce la contraseña para entrar.</p><input id="passwordInput" type="password" autocomplete="current-password" placeholder="Contraseña" aria-label="Contraseña" required><button class="primary" type="submit">Entrar</button><button class="secondary motion-toggle" id="animationToggle" type="button" aria-pressed="true" data-water-frozen="false"><span id="animationToggleLabel">Animaciones activadas</span></button><button class="secondary reset-button" id="resetRecordsLoginButton" type="button">⚠️ Reiniciar registros</button><div class="login-error" id="loginError" role="alert" aria-live="polite"></div><div class="login-reset-message" id="loginResetMessage" role="status" aria-live="polite"></div></form></section>
 <main class="shell hidden" id="appShell">
   <header class="top"><div class="top-left"><button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="brand">Control del torneo</div><nav class="menu-dropdown" id="menuDropdown" aria-label="Secciones"><button class="menu-item" type="button" data-view="registry">Registro completo</button><button class="menu-item" type="button" data-view="scanner">Escáner</button><button class="menu-item" type="button" id="addCsvButton">Añadir CSV</button></nav></div><div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Carga un CSV</span></div></header>
   <input id="csvInput" class="hidden" type="file" accept=".csv,text/csv" aria-label="Seleccionar archivo CSV">
@@ -47,6 +74,7 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
     <p class="foot">Este historial es local y solo aparece en este navegador.</p>
   </section>
 </section>
+<footer class="reset-footer" id="resetFooter"><button class="secondary reset-button" id="resetRecordsAppButton" type="button">⚠️ Reiniciar registros</button></footer>
 </main>
 <div class="success-flash" id="successFlash" aria-hidden="true"></div>
 <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
@@ -58,6 +86,14 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
     <div class="modal-actions"><button class="verify" id="errorRetry" type="button">Volver a introducir el código</button><button class="secondary" id="errorClose" type="button">Cerrar</button></div>
   </section>
 </div>
+<div class="reset-confirm" id="resetConfirm" aria-hidden="true">
+  <section class="reset-card" role="alertdialog" aria-modal="true" aria-labelledby="resetTitle" aria-describedby="resetDescription">
+    <div class="reset-warning" aria-hidden="true">⚠️</div>
+    <h2 id="resetTitle">¿Reiniciar todos los registros?</h2>
+    <p id="resetDescription">Se borrará el historial de asistencias guardado en este dispositivo y no se podrá recuperar. El CSV y la lista de jugadores se conservarán.</p>
+    <div class="reset-actions"><button class="cancel-reset" id="cancelReset" type="button">Cancelar</button><button class="confirm-reset" id="confirmReset" type="button">Sí, borrar registros</button></div>
+  </section>
+</div>
 <script>
 const API = window.TOURNAMENT_API || "";
 const HISTORY_KEY = "torneo-verificaciones-v1";
@@ -65,16 +101,24 @@ const ANIMATIONS_KEY = "torneo-animaciones-v1";
 const APP_PASSWORD = "ShowCast";
 const $ = (id) => document.getElementById(id);
 const camera = $("camera"), card = $("scanCard"), message = $("message");
-const menu = $("menuDropdown"), menuToggle = $("menuToggle"), modal = $("modalBackdrop");
-let stream = null, detector = null, scanFrame = 0, currentPlayer = null, csvPlayers = [], csvFileName = "", animationsEnabled = readAnimationPreference();
+const menu = $("menuDropdown"), menuToggle = $("menuToggle"), modal = $("modalBackdrop"), resetDialog = $("resetConfirm");
+let stream = null, detector = null, scanFrame = 0, currentPlayer = null, csvPlayers = [], csvFileName = "", animationsEnabled = readAnimationPreference(), waterFreezeTimer = 0, resetLauncher = null;
 
 function readAnimationPreference(){try{const saved=localStorage.getItem(ANIMATIONS_KEY);if(saved!==null)return saved==="true"}catch{}return !(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)}
-function setAnimationsEnabled(enabled){animationsEnabled=enabled;document.body.classList.toggle("no-animations",!enabled);const button=$("animationToggle");button.setAttribute("aria-pressed",String(enabled));button.textContent=enabled?"Animaciones activadas":"Animaciones desactivadas";try{localStorage.setItem(ANIMATIONS_KEY,String(enabled))}catch{}}
+function setAnimationsEnabled(enabled,freezeWaterAfterDelay=true){animationsEnabled=enabled;document.body.classList.toggle("no-animations",!enabled);const button=$("animationToggle");button.setAttribute("aria-pressed",String(enabled));$("animationToggleLabel").textContent=enabled?"Animaciones activadas":"Animaciones desactivadas";if(waterFreezeTimer){window.clearTimeout(waterFreezeTimer);waterFreezeTimer=0}if(enabled){button.dataset.waterFrozen="false"}else if(freezeWaterAfterDelay){button.dataset.waterFrozen="false";waterFreezeTimer=window.setTimeout(()=>{if(!animationsEnabled)button.dataset.waterFrozen="true";waterFreezeTimer=0},1000)}else{button.dataset.waterFrozen="true"}try{localStorage.setItem(ANIMATIONS_KEY,String(enabled))}catch{}}
 function playGreenPulse(){if(!animationsEnabled)return;const flash=$("successFlash");flash.classList.remove("play");void flash.offsetWidth;flash.classList.add("play");window.setTimeout(()=>flash.classList.remove("play"),750)}
-setAnimationsEnabled(animationsEnabled);
+setAnimationsEnabled(animationsEnabled,false);
 
 $("loginForm").addEventListener("submit",event=>{event.preventDefault();if($("passwordInput").value===APP_PASSWORD){$("loginGate").classList.add("hidden");$("appShell").classList.remove("hidden");$("passwordInput").value="";}else{$("loginError").textContent="Contraseña incorrecta. Inténtalo de nuevo.";$("passwordInput").select();}});
 $("animationToggle").addEventListener("click",()=>setAnimationsEnabled(!animationsEnabled));
+function openResetConfirmation(event){resetLauncher=event.currentTarget;resetDialog.classList.add("show");resetDialog.setAttribute("aria-hidden","false");$("cancelReset").focus()}
+function closeResetConfirmation(){resetDialog.classList.remove("show");resetDialog.setAttribute("aria-hidden","true");if(resetLauncher?.isConnected)resetLauncher.focus();resetLauncher=null}
+function resetAttendanceHistory(){saveHistory([]);csvPlayers.forEach(player=>{player.verified=false});if(currentPlayer)currentPlayer.verified=false;currentPlayer=null;closeModal();renderRecent();renderAll();closeResetConfirmation();const confirmation="Historial de asistencias reiniciado en este dispositivo.";if($("appShell").classList.contains("hidden"))$("loginResetMessage").textContent=confirmation;else setMessage(confirmation,"success")}
+$("resetRecordsLoginButton").addEventListener("click",openResetConfirmation);
+$("resetRecordsAppButton").addEventListener("click",openResetConfirmation);
+$("cancelReset").addEventListener("click",closeResetConfirmation);
+$("confirmReset").addEventListener("click",resetAttendanceHistory);
+resetDialog.addEventListener("click",event=>{if(event.target===resetDialog)closeResetConfirmation()});
 [$("passwordInput"),$("codeInput")].forEach(field=>field.addEventListener("input",()=>{if(!animationsEnabled)return;field.classList.remove("typing-pop");void field.offsetWidth;field.classList.add("typing-pop");}));
 
 function setMessage(text, kind=""){ message.textContent=text; message.className="message " + kind; }
@@ -89,7 +133,7 @@ $("addCsvButton").addEventListener("click",()=>{$("csvInput").click();});
 $("csvInput").addEventListener("change",async event=>{const file=event.target.files?.[0];if(!file)return;try{const text=await readCsvFile(file);const imported=parseRosterCsv(text);csvPlayers=imported;csvFileName=file.name;setConnection(true);setMessage("CSV cargado: "+imported.length+" jugadores. Ya puedes buscar por código.","success");}catch(error){csvPlayers=[];csvFileName="";setConnection(Boolean(API));setMessage(error.message||"No se pudo leer el CSV.","error");}finally{event.target.value="";closeMenu();}});
 document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>{const view=button.dataset.view;$("scannerView").classList.toggle("active",view==="scanner");$("registryView").classList.toggle("active",view==="registry");closeMenu();if(view==="scanner")renderRecent();else renderAll();window.scrollTo({top:0,behavior:animationsEnabled?"smooth":"auto"});}));
 document.addEventListener("click",event=>{if(!event.target.closest(".top-left"))closeMenu();});
-document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeModal();closeMenu();}});
+document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeModal();closeMenu();if(resetDialog.classList.contains("show"))closeResetConfirmation();}});
 $("manualButton").addEventListener("click",()=>{const form=$("manualForm");form.classList.toggle("show");if(form.classList.contains("show"))$("codeInput").focus();});
 $("manualForm").addEventListener("submit",async event=>{event.preventDefault();const code=$("codeInput").value.trim();if(code)await lookup(code);});
 card.addEventListener("click",()=>{if(stream)stopCamera();else startCamera();});
