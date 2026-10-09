@@ -38,9 +38,31 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
   .cancel-reset{border:1px solid #ccc;background:#fff;color:#111}
   .confirm-reset{border:0;background:#9d2525;color:#fff}
   .login-reset-message{min-height:20px;margin-top:6px;color:var(--ok);font-size:12px}
+  .background-video{position:fixed;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;pointer-events:none;transition:opacity .45s ease}
+  body.animations-enabled .background-video{opacity:1}
+  body.animations-enabled .login-gate{background:transparent}
+  body.animations-enabled::before,body.animations-enabled::after,body.animations-enabled .login-gate::before,body.animations-enabled .login-gate::after{display:none!important}
+  body.no-animations .background-video{opacity:0!important}
+  .login-gate.leaving{pointer-events:none;animation:gateUnfold .62s cubic-bezier(.2,.75,.25,1) both}
+  #appShell.unfolding .top,#appShell.unfolding .view.active>.hero,#appShell.unfolding #scanCard,#appShell.unfolding #manualButton,#appShell.unfolding #manualForm,#appShell.unfolding #message,#appShell.unfolding .section,#appShell.unfolding #resetFooter{animation:contentUnfold .48s cubic-bezier(.18,.75,.25,1) both}
+  #appShell.unfolding .top{animation-delay:.04s}
+  #appShell.unfolding .view.active>.hero{animation-delay:.1s}
+  #appShell.unfolding #scanCard{animation-delay:.16s}
+  #appShell.unfolding #manualButton,#appShell.unfolding #manualForm{animation-delay:.22s}
+  #appShell.unfolding #message{animation-delay:.28s}
+  #appShell.unfolding .section{animation-delay:.34s}
+  #appShell.unfolding #resetFooter{animation-delay:.4s}
+  @keyframes gateUnfold{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.94) translateY(-14px)}}
+  @keyframes contentUnfold{0%{opacity:0;transform:translateY(24px) scaleY(.92);transform-origin:top center}75%{opacity:1;transform:translateY(-3px) scaleY(1.01)}100%{opacity:1;transform:translateY(0) scaleY(1)}}
+  .menu-dropdown{transform-origin:top left}
+  .menu-dropdown.open{animation:menuUnfold .36s cubic-bezier(.2,.8,.25,1.08) both}
+  .menu-toggle svg{transition:transform .32s cubic-bezier(.2,.8,.25,1)}
+  .menu-toggle[aria-expanded="true"] svg{transform:rotate(90deg)}
+  @keyframes menuUnfold{0%{opacity:0;transform:translateY(-9px) scaleY(.72) scaleX(.94)}72%{opacity:1;transform:translateY(1px) scaleY(1.03) scaleX(1)}100%{opacity:1;transform:translateY(0) scale(1)}}
   </style>
 </head>
 <body>
+<video class="background-video" id="backgroundVideo" muted playsinline loop preload="none" poster="fondo-torneo.png" aria-hidden="true"><source src="fondo-animado.mp4" type="video/mp4"></video>
 <section class="login-gate" id="loginGate" aria-labelledby="loginTitle"><form class="login-card" id="loginForm"><h1 id="loginTitle">Control del torneo</h1><p>Introduce la contraseña para entrar.</p><input id="passwordInput" type="password" autocomplete="current-password" placeholder="Contraseña" aria-label="Contraseña" required><button class="primary" type="submit">Entrar</button><button class="secondary motion-toggle" id="animationToggle" type="button" aria-pressed="true" data-water-frozen="false"><span id="animationToggleLabel">Animaciones activadas</span></button><button class="secondary reset-button" id="resetRecordsLoginButton" type="button">⚠️ Reiniciar registros</button><div class="login-error" id="loginError" role="alert" aria-live="polite"></div><div class="login-reset-message" id="loginResetMessage" role="status" aria-live="polite"></div></form></section>
 <main class="shell hidden" id="appShell">
   <header class="top"><div class="top-left"><button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="brand">Control del torneo</div><nav class="menu-dropdown" id="menuDropdown" aria-label="Secciones"><button class="menu-item" type="button" data-view="registry">Registro completo</button><button class="menu-item" type="button" data-view="scanner">Escáner</button><button class="menu-item" type="button" id="addCsvButton">Añadir CSV</button></nav></div><div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Carga un CSV</span></div></header>
@@ -100,16 +122,17 @@ const HISTORY_KEY = "torneo-verificaciones-v1";
 const ANIMATIONS_KEY = "torneo-animaciones-v1";
 const APP_PASSWORD = "ShowCast";
 const $ = (id) => document.getElementById(id);
-const camera = $("camera"), card = $("scanCard"), message = $("message");
+const camera = $("camera"), card = $("scanCard"), message = $("message"), backgroundVideo = $("backgroundVideo");
 const menu = $("menuDropdown"), menuToggle = $("menuToggle"), modal = $("modalBackdrop"), resetDialog = $("resetConfirm");
 let stream = null, detector = null, scanFrame = 0, currentPlayer = null, csvPlayers = [], csvFileName = "", animationsEnabled = readAnimationPreference(), waterFreezeTimer = 0, resetLauncher = null;
 
 function readAnimationPreference(){try{const saved=localStorage.getItem(ANIMATIONS_KEY);if(saved!==null)return saved==="true"}catch{}return !(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)}
-function setAnimationsEnabled(enabled,freezeWaterAfterDelay=true){animationsEnabled=enabled;document.body.classList.toggle("no-animations",!enabled);const button=$("animationToggle");button.setAttribute("aria-pressed",String(enabled));$("animationToggleLabel").textContent=enabled?"Animaciones activadas":"Animaciones desactivadas";if(waterFreezeTimer){window.clearTimeout(waterFreezeTimer);waterFreezeTimer=0}if(enabled){button.dataset.waterFrozen="false"}else if(freezeWaterAfterDelay){button.dataset.waterFrozen="false";waterFreezeTimer=window.setTimeout(()=>{if(!animationsEnabled)button.dataset.waterFrozen="true";waterFreezeTimer=0},1000)}else{button.dataset.waterFrozen="true"}try{localStorage.setItem(ANIMATIONS_KEY,String(enabled))}catch{}}
+function setBackgroundVideo(playing){if(!backgroundVideo)return;if(playing){try{const request=backgroundVideo.play();if(request?.catch)request.catch(()=>{})}catch{}}else backgroundVideo.pause()}
+function setAnimationsEnabled(enabled,freezeWaterAfterDelay=true){animationsEnabled=enabled;document.body.classList.toggle("no-animations",!enabled);document.body.classList.toggle("animations-enabled",enabled);setBackgroundVideo(enabled);const button=$("animationToggle");button.setAttribute("aria-pressed",String(enabled));$("animationToggleLabel").textContent=enabled?"Animaciones activadas":"Animaciones desactivadas";if(waterFreezeTimer){window.clearTimeout(waterFreezeTimer);waterFreezeTimer=0}if(enabled){button.dataset.waterFrozen="false"}else if(freezeWaterAfterDelay){button.dataset.waterFrozen="false";waterFreezeTimer=window.setTimeout(()=>{if(!animationsEnabled)button.dataset.waterFrozen="true";waterFreezeTimer=0},1000)}else{button.dataset.waterFrozen="true"}try{localStorage.setItem(ANIMATIONS_KEY,String(enabled))}catch{}}
 function playGreenPulse(){if(!animationsEnabled)return;const flash=$("successFlash");flash.classList.remove("play");void flash.offsetWidth;flash.classList.add("play");window.setTimeout(()=>flash.classList.remove("play"),750)}
 setAnimationsEnabled(animationsEnabled,false);
 
-$("loginForm").addEventListener("submit",event=>{event.preventDefault();if($("passwordInput").value===APP_PASSWORD){$("loginGate").classList.add("hidden");$("appShell").classList.remove("hidden");$("passwordInput").value="";}else{$("loginError").textContent="Contraseña incorrecta. Inténtalo de nuevo.";$("passwordInput").select();}});
+$("loginForm").addEventListener("submit",event=>{event.preventDefault();const gate=$("loginGate"),app=$("appShell");if(gate.classList.contains("leaving"))return;if($("passwordInput").value===APP_PASSWORD){$("passwordInput").value="";app.classList.remove("hidden");if(animationsEnabled){gate.classList.add("leaving");app.classList.add("unfolding");window.setTimeout(()=>{gate.classList.add("hidden");gate.classList.remove("leaving");app.classList.remove("unfolding")},950)}else{gate.classList.add("hidden");app.classList.remove("unfolding")}}else{$("loginError").textContent="Contraseña incorrecta. Inténtalo de nuevo.";$("passwordInput").select();}});
 $("animationToggle").addEventListener("click",()=>setAnimationsEnabled(!animationsEnabled));
 function openResetConfirmation(event){resetLauncher=event.currentTarget;resetDialog.classList.add("show");resetDialog.setAttribute("aria-hidden","false");$("cancelReset").focus()}
 function closeResetConfirmation(){resetDialog.classList.remove("show");resetDialog.setAttribute("aria-hidden","true");if(resetLauncher?.isConnected)resetLauncher.focus();resetLauncher=null}
