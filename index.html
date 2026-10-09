@@ -59,6 +59,7 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
   .menu-toggle svg{transition:transform .32s cubic-bezier(.2,.8,.25,1)}
   .menu-toggle[aria-expanded="true"] svg{transform:rotate(90deg)}
   @keyframes menuUnfold{0%{opacity:0;transform:translateY(-9px) scaleY(.72) scaleX(.94)}72%{opacity:1;transform:translateY(1px) scaleY(1.03) scaleX(1)}100%{opacity:1;transform:translateY(0) scale(1)}}
+  .already-verified{margin:18px 0 0;padding:11px 13px;border:1px solid #69ad78;border-radius:12px;background:#dff3e3;color:#145b2a;font-weight:750}
   </style>
 </head>
 <body>
@@ -190,6 +191,7 @@ async function startZXingFallback(requestId){
 }
 async function startCamera(){
   if(stream||cameraStarting)return;
+  if(!csvPlayers.length){setMessage("Antes de abrir la cámara, sube el archivo CSV desde el menú.","error");return}
   if(!navigator.mediaDevices?.getUserMedia){setMessage("Este navegador no permite usar la cámara. Introduce el código manualmente.","error");return}
   cameraStarting=true;card.setAttribute("aria-pressed","true");const requestId=++cameraRequestId;let pendingStream=null;detector=null;
   try{
@@ -215,7 +217,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden&&(stream||c
 
 async function lookup(code){
   currentPlayer=null;const cleanCode=normalizeCode(code);setMessage(csvPlayers.length?"Buscando código en el CSV…":"Buscando código…");
-  if(csvPlayers.length){const player=csvPlayers.find(row=>normalizeCode(row.code)===cleanCode);if(!player){showError("Código no encontrado","No encontramos «"+code+"» en el CSV. Revísalo y vuelve a introducirlo.");setMessage("Código no encontrado en el CSV.","error");return}player.verified=getHistory().some(record=>normalizeCode(record.code)===normalizeCode(player.code));currentPlayer=player;renderPlayer(player);openModal("player");setMessage("Código válido. Comprueba el nombre y el equipo.","success");return}
+  if(csvPlayers.length){const player=csvPlayers.find(row=>normalizeCode(row.code)===cleanCode);if(!player){showError("Código no encontrado","No encontramos «"+code+"» en el CSV. Revísalo y vuelve a introducirlo.");setMessage("Código no encontrado en el CSV.","error");return}player.verified=getHistory().some(record=>normalizeCode(record.code)===normalizeCode(player.code));currentPlayer=player;renderPlayer(player);openModal("player");setMessage(player.verified?"Este código ya ha sido verificado.":"Código válido. Comprueba el nombre y el equipo.","success");return}
   if(!API){showError("Añade el CSV","Abre el menú y elige «Añadir CSV» para cargar la lista de jugadores.");setMessage("Carga un CSV para empezar a verificar jugadores.","error");return}
   try{
     const response=await fetch(API.replace(/\/$/,"")+"/players/"+encodeURIComponent(cleanCode),{credentials:"include"});
@@ -225,12 +227,12 @@ async function lookup(code){
     if(!player||!player.name)throw new Error("invalid-player");
     player.code=player.code||code;
     player.verified=getHistory().some(record=>normalizeCode(record.code)===normalizeCode(player.code));
-    currentPlayer=player;renderPlayer(player);openModal("player");setMessage("Código válido. Comprueba el nombre y el equipo.","success");
+    currentPlayer=player;renderPlayer(player);openModal("player");setMessage(player.verified?"Este código ya ha sido verificado.":"Código válido. Comprueba el nombre y el equipo.","success");
   }catch{setMessage("No se pudo consultar el Excel. Comprueba la conexión e inténtalo de nuevo.","error");}
 }
 function renderPlayer(player){
   const verified=Boolean(player.verified)||getHistory().some(record=>normalizeCode(record.code)===normalizeCode(player.code));
-  $("playerCard").innerHTML='<div class="modal-top"><div><h2 id="playerModalTitle">'+escapeHtml(player.name)+'</h2><p class="modal-subtitle">'+escapeHtml(player.team||"Sin equipo")+'</p></div><button class="modal-close" id="playerClose" type="button" aria-label="Cerrar">×</button></div><div class="player-data"><div class="detail"><small>Nombre</small><strong>'+escapeHtml(player.name)+'</strong></div><div class="detail"><small>Equipo</small><strong>'+escapeHtml(player.team||"Sin equipo")+'</strong></div><div class="detail"><small>Código</small><strong>'+escapeHtml(player.code)+'</strong></div></div><div class="modal-actions"><button class="verify" id="verifyButton" '+(verified?"disabled":"")+'>'+(verified?"Ya verificado en esta web":"Confirmar verificación")+'</button></div>';
+  $("playerCard").innerHTML='<div class="modal-top"><div><h2 id="playerModalTitle">'+escapeHtml(player.name)+'</h2><p class="modal-subtitle">'+escapeHtml(player.team||"Sin equipo")+'</p></div><button class="modal-close" id="playerClose" type="button" aria-label="Cerrar">×</button></div>'+(verified?'<p class="already-verified" role="status">✓ Este código ya ha sido verificado.</p>':'')+'<div class="player-data"><div class="detail"><small>Nombre</small><strong>'+escapeHtml(player.name)+'</strong></div><div class="detail"><small>Equipo</small><strong>'+escapeHtml(player.team||"Sin equipo")+'</strong></div><div class="detail"><small>Código</small><strong>'+escapeHtml(player.code)+'</strong></div></div><div class="modal-actions"><button class="verify" id="verifyButton" '+(verified?"disabled":"")+'>'+(verified?"Ya verificado en esta web":"Confirmar verificación")+'</button></div>';
   $("playerCard").classList.toggle("verified",verified);
   $("playerClose").addEventListener("click",closeModal);
   const button=$("verifyButton");if(!verified)button.addEventListener("click",()=>verifyPlayer(player));
