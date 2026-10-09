@@ -60,6 +60,7 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
   .menu-toggle[aria-expanded="true"] svg{transform:rotate(90deg)}
   @keyframes menuUnfold{0%{opacity:0;transform:translateY(-9px) scaleY(.72) scaleX(.94)}72%{opacity:1;transform:translateY(1px) scaleY(1.03) scaleX(1)}100%{opacity:1;transform:translateY(0) scale(1)}}
   .already-verified{margin:18px 0 0;padding:11px 13px;border:1px solid #69ad78;border-radius:12px;background:#dff3e3;color:#145b2a;font-weight:750}
+  .attendance-status{display:inline-block;padding:4px 8px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}.attendance-status.attended{background:#dff3e3;color:#145b2a}.attendance-status.pending{background:#f0f0f0;color:#555}
   </style>
 </head>
 <body>
@@ -90,10 +91,10 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
   </section>
 </section>
 <section id="registryView" class="view" aria-labelledby="registryTitle">
-  <section class="hero"><h1 id="registryTitle">Registro completo</h1><p class="intro">Todos los códigos verificados desde este dispositivo.</p></section>
+  <section class="hero"><h1 id="registryTitle">Registro completo</h1><p class="intro">Todos los jugadores del CSV y su estado de asistencia en este dispositivo.</p></section>
   <section class="section">
     <div class="section-head"><h2>Verificaciones</h2><span id="allRecordCount">0 registros</span></div>
-    <div class="table-wrap registry-scroll" tabindex="0" role="region" aria-label="Tabla de verificaciones"><table class="records registry-table"><thead><tr><th>Jugador</th><th>Equipo</th><th>Código</th><th>Hora</th><th>Estado</th></tr></thead><tbody id="allRows"><tr><td colspan="5" class="empty">Todavía no hay códigos verificados.</td></tr></tbody></table></div>
+    <div class="table-wrap registry-scroll" tabindex="0" role="region" aria-label="Tabla completa de jugadores y asistencias"><table class="records registry-table"><thead><tr><th>Jugador</th><th>Equipo</th><th>Código</th><th>Hora</th><th>Asistencia</th></tr></thead><tbody id="allRows"><tr><td colspan="5" class="empty">Carga el CSV para ver a todos los jugadores.</td></tr></tbody></table></div>
     <p class="foot">Este historial es local y solo aparece en este navegador.</p>
   </section>
 </section>
@@ -121,6 +122,7 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
 const API = window.TOURNAMENT_API || "";
 const HISTORY_KEY = "torneo-verificaciones-v1";
 const ANIMATIONS_KEY = "torneo-animaciones-v1";
+const SESSION_KEY = "torneo-sesion-activa-v1";
 const APP_PASSWORD = "ShowCast";
 const $ = (id) => document.getElementById(id);
 const camera = $("camera"), card = $("scanCard"), message = $("message"), backgroundVideo = $("backgroundVideo");
@@ -134,8 +136,9 @@ function animateBackgroundRate(from,to,pauseAtEnd,minimumRate){const started=per
 function setAnimationsEnabled(enabled,freezeWaterAfterDelay=true,deferBackground=false){animationsEnabled=enabled;document.body.classList.toggle("no-animations",!enabled);document.body.classList.toggle("animations-enabled",enabled);const updateBackground=()=>{if(animationsEnabled===enabled)setBackgroundVideo(enabled)};if(deferBackground)window.setTimeout(updateBackground,180);else updateBackground();const button=$("animationToggle");button.setAttribute("aria-pressed",String(enabled));$("animationToggleLabel").textContent=enabled?"Animaciones activadas":"Animaciones desactivadas";if(waterFreezeTimer){window.clearTimeout(waterFreezeTimer);waterFreezeTimer=0}if(enabled){button.dataset.waterFrozen="false"}else if(freezeWaterAfterDelay){button.dataset.waterFrozen="false";waterFreezeTimer=window.setTimeout(()=>{if(!animationsEnabled)button.dataset.waterFrozen="true";waterFreezeTimer=0},1000)}else{button.dataset.waterFrozen="true"}try{localStorage.setItem(ANIMATIONS_KEY,String(enabled))}catch{}}
 function playGreenPulse(){if(!animationsEnabled)return;const flash=$("successFlash");flash.classList.remove("play");void flash.offsetWidth;flash.classList.add("play");window.setTimeout(()=>flash.classList.remove("play"),750)}
 setAnimationsEnabled(animationsEnabled,false,true);
+try{if(sessionStorage.getItem(SESSION_KEY)==="true"){$("loginGate").classList.add("hidden");$("appShell").classList.remove("hidden")}}catch{}
 
-$("loginForm").addEventListener("submit",event=>{event.preventDefault();const gate=$("loginGate"),app=$("appShell");if(gate.classList.contains("leaving"))return;if($("passwordInput").value===APP_PASSWORD){$("passwordInput").value="";app.classList.remove("hidden");if(animationsEnabled){gate.classList.add("leaving");app.classList.add("unfolding");window.setTimeout(()=>{gate.classList.add("hidden");gate.classList.remove("leaving");app.classList.remove("unfolding")},950)}else{gate.classList.add("hidden");app.classList.remove("unfolding")}}else{$("loginError").textContent="Contraseña incorrecta. Inténtalo de nuevo.";$("passwordInput").select();}});
+$("loginForm").addEventListener("submit",event=>{event.preventDefault();const gate=$("loginGate"),app=$("appShell");if(gate.classList.contains("leaving"))return;if($("passwordInput").value===APP_PASSWORD){try{sessionStorage.setItem(SESSION_KEY,"true")}catch{}$("passwordInput").value="";app.classList.remove("hidden");if(animationsEnabled){gate.classList.add("leaving");app.classList.add("unfolding");window.setTimeout(()=>{gate.classList.add("hidden");gate.classList.remove("leaving");app.classList.remove("unfolding")},950)}else{gate.classList.add("hidden");app.classList.remove("unfolding")}}else{$("loginError").textContent="Contraseña incorrecta. Inténtalo de nuevo.";$("passwordInput").select();}});
 $("animationToggle").addEventListener("click",()=>setAnimationsEnabled(!animationsEnabled));
 function openResetConfirmation(event){resetLauncher=event.currentTarget;resetDialog.classList.add("show");resetDialog.setAttribute("aria-hidden","false");$("cancelReset").focus()}
 function closeResetConfirmation(){resetDialog.classList.remove("show");resetDialog.setAttribute("aria-hidden","true");if(resetLauncher?.isConnected)resetLauncher.focus();resetLauncher=null}
@@ -157,8 +160,8 @@ function openMenu(){menu.classList.add("open");menuToggle.setAttribute("aria-exp
 function closeMenu(){menu.classList.remove("open");menuToggle.setAttribute("aria-expanded","false");menuToggle.setAttribute("aria-label","Abrir menú");}
 menuToggle.addEventListener("click",()=>menu.classList.contains("open")?closeMenu():openMenu());
 $("addCsvButton").addEventListener("click",()=>{$("csvInput").click();});
-$("csvInput").addEventListener("change",async event=>{const file=event.target.files?.[0];if(!file)return;try{const text=await readCsvFile(file);const imported=parseRosterCsv(text);csvPlayers=imported;csvFileName=file.name;setConnection(true);setMessage("CSV cargado: "+imported.length+" jugadores. Ya puedes buscar por código.","success");}catch(error){setConnection(Boolean(csvPlayers.length||API));const previousRoster=csvPlayers.length?" La lista anterior sigue cargada.":"";setMessage((error.message||"No se pudo leer el CSV.")+previousRoster,"error");}finally{event.target.value="";closeMenu();}});
-document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>{const view=button.dataset.view;$("scannerView").classList.toggle("active",view==="scanner");$("registryView").classList.toggle("active",view==="registry");closeMenu();if(view==="scanner")renderRecent();else renderAll();window.scrollTo({top:0,behavior:animationsEnabled?"smooth":"auto"});}));
+$("csvInput").addEventListener("change",async event=>{const file=event.target.files?.[0];if(!file)return;try{const text=await readCsvFile(file);const imported=parseRosterCsv(text);csvPlayers=imported;csvFileName=file.name;setConnection(true);setMessage("CSV cargado: "+imported.length+" jugadores. Ya puedes buscar por código.","success");renderAll();}catch(error){setConnection(Boolean(csvPlayers.length||API));const previousRoster=csvPlayers.length?" La lista anterior sigue cargada.":"";setMessage((error.message||"No se pudo leer el CSV.")+previousRoster,"error");}finally{event.target.value="";closeMenu();}});
+document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>{const view=button.dataset.view;closeMenu();if(view==="registry"&&!csvPlayers.length){showCsvWarning();return}$("scannerView").classList.toggle("active",view==="scanner");$("registryView").classList.toggle("active",view==="registry");if(view==="scanner")renderRecent();else renderAll();window.scrollTo({top:0,behavior:animationsEnabled?"smooth":"auto"});}));
 document.addEventListener("click",event=>{if(!event.target.closest(".top-left"))closeMenu();});
 document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeModal();closeMenu();if(resetDialog.classList.contains("show"))closeResetConfirmation();}});
 $("manualButton").addEventListener("click",()=>{const form=$("manualForm");form.classList.toggle("show");if(form.classList.contains("show"))$("codeInput").focus();});
@@ -173,7 +176,7 @@ modal.addEventListener("keydown",event=>{if(event.key!=="Tab")return;const contr
 function openModal(type){if(!modal.classList.contains("show"))modalReturnFocus=document.activeElement;modal.classList.add("show");modal.setAttribute("aria-hidden","false");const playerCard=$("playerCard"),errorCard=$("errorCard");playerCard.classList.toggle("show",type==="player");errorCard.classList.toggle("hidden",type!=="error");requestAnimationFrame(()=>{if(!modal.classList.contains("show"))return;const activeCard=type==="player"?playerCard:errorCard;(activeCard.querySelector("button:not([disabled])")||activeCard).focus()});}
 function closeModal(){modal.classList.remove("show");modal.setAttribute("aria-hidden","true");$("playerCard").classList.remove("show");$("errorCard").classList.add("hidden");if(modalReturnFocus?.isConnected)modalReturnFocus.focus();modalReturnFocus=null;}
 function showError(title,text){$("errorIcon").textContent="☹";$("errorTitle").textContent=title;$("errorText").textContent=text;$("errorRetry").classList.remove("hidden");$("errorAddCsvButton").classList.add("hidden");openModal("error");}
-function showCsvWarning(){$("errorIcon").textContent="⚠️";$("errorTitle").textContent="Falta cargar el CSV";$("errorText").textContent="Antes de abrir la cámara, añade el archivo CSV con la lista de jugadores.";$("errorRetry").classList.add("hidden");$("errorAddCsvButton").classList.remove("hidden");openModal("error");}
+function showCsvWarning(){$("errorIcon").textContent="⚠️";$("errorTitle").textContent="Falta cargar el CSV";$("errorText").textContent="Para consultar el registro completo o usar la cámara, primero añade el archivo CSV con la lista de jugadores.";$("errorRetry").classList.add("hidden");$("errorAddCsvButton").classList.remove("hidden");openModal("error");}
 
 function loadZXing(){if(window.ZXingBrowser?.BrowserMultiFormatReader)return Promise.resolve(window.ZXingBrowser);if(!zxingLoadPromise){zxingLoadPromise=new Promise((resolve,reject)=>{const script=document.createElement("script");script.src="https://unpkg.com/@zxing/browser@0.2.1";script.async=true;script.onload=()=>{if(window.ZXingBrowser?.BrowserMultiFormatReader)resolve(window.ZXingBrowser);else{zxingLoadPromise=null;reject(new Error("No se pudo cargar el lector alternativo."))}};script.onerror=()=>{zxingLoadPromise=null;reject(new Error("No se pudo cargar el lector alternativo."))};document.head.appendChild(script)})}return zxingLoadPromise}
 function loadTesseract(){if(window.Tesseract?.createWorker)return Promise.resolve(window.Tesseract);if(!ocrLoadPromise){ocrLoadPromise=new Promise((resolve,reject)=>{const script=document.createElement("script");script.src="https://cdn.jsdelivr.net/npm/tesseract.js@7/dist/tesseract.min.js";script.async=true;script.onload=()=>{if(window.Tesseract?.createWorker)resolve(window.Tesseract);else{ocrLoadPromise=null;reject(new Error("No se pudo cargar el lector de texto."))}};script.onerror=()=>{ocrLoadPromise=null;reject(new Error("No se pudo cargar el lector de texto."))};document.head.appendChild(script)})}return ocrLoadPromise}
@@ -256,10 +259,12 @@ function renderRecent(){
   body.innerHTML=rows.map(record=>'<tr class="verified-row"><td>'+escapeHtml(record.name)+'</td><td>'+escapeHtml(record.team||"—")+'</td><td>'+escapeHtml(formatTime(record.timestamp))+'</td></tr>').join("");
 }
 function renderAll(){
-  const rows=getHistory(),body=$("allRows");
-  $("allRecordCount").textContent=rows.length+" "+(rows.length===1?"registro":"registros");
-  if(!rows.length){body.innerHTML='<tr><td colspan="5" class="empty">Todavía no hay códigos verificados.</td></tr>';return}
-  body.innerHTML=rows.map(record=>'<tr class="verified-row"><td>'+escapeHtml(record.name)+'</td><td>'+escapeHtml(record.team||"—")+'</td><td>'+escapeHtml(record.code)+'</td><td>'+escapeHtml(formatDateTime(record.timestamp))+'</td><td>Verificado</td></tr>').join("");
+  const history=getHistory(),body=$("allRows");
+  if(!csvPlayers.length){$("allRecordCount").textContent="CSV pendiente";body.innerHTML='<tr><td colspan="5" class="empty">Carga el CSV para ver a todos los jugadores y sus asistencias.</td></tr>';return}
+  const rows=csvPlayers.map(player=>{const record=history.find(item=>normalizeCode(item.code)===normalizeCode(player.code));return{name:player.name,team:player.team,code:player.code,timestamp:record?.timestamp||"",attended:Boolean(record)}});
+  const attended=rows.filter(player=>player.attended).length;
+  $("allRecordCount").textContent=rows.length+" jugadores · "+attended+" asistidos";
+  body.innerHTML=rows.map(player=>'<tr class="'+(player.attended?"verified-row":"")+'"><td>'+escapeHtml(player.name)+'</td><td>'+escapeHtml(player.team||"—")+'</td><td>'+escapeHtml(player.code)+'</td><td>'+escapeHtml(player.timestamp?formatDateTime(player.timestamp):"—")+'</td><td><span class="attendance-status '+(player.attended?"attended":"pending")+'">'+(player.attended?"Asistido":"No asistido")+'</span></td></tr>').join("");
 }
 function formatTime(value){const date=new Date(value);return Number.isNaN(date.getTime())?"—":new Intl.DateTimeFormat("es-ES",{hour:"2-digit",minute:"2-digit"}).format(date)}
 function formatDateTime(value){const date=new Date(value);return Number.isNaN(date.getTime())?"—":new Intl.DateTimeFormat("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(date)}
