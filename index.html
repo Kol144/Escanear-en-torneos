@@ -7,11 +7,13 @@
 <title>Control del torneo</title>
 <style>
 :root{color-scheme:light;--ink:#111;--muted:#6b6b6b;--line:#dedede;--paper:#f5f5f5;--white:#fff;--soft:#ececec;--ok:#176b3a;--error:#9d2525}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#f35b11 url("fondo-torneo.png") center/cover fixed no-repeat;color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}.shell{max-width:560px;min-height:100svh;margin:auto;padding:calc(18px + env(safe-area-inset-top)) 18px calc(30px + env(safe-area-inset-bottom))}.top{display:flex;justify-content:space-between;align-items:center;margin:0 0 18px;padding:11px 14px;border:1px solid #ffffff9c;border-radius:15px;background:#fffffff2;backdrop-filter:blur(12px);box-shadow:0 8px 24px #8a220b20}.brand{font-size:16px;font-weight:750;letter-spacing:.07em;text-transform:uppercase}.hero{margin-bottom:18px;padding:16px 18px;border:1px solid #ffffffa8;border-radius:18px;background:#fffffff2;backdrop-filter:blur(12px);box-shadow:0 10px 28px #8a220b20}.status{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:#999}.dot.ready{background:var(--ok)}h1{font-size:clamp(30px,8vw,36px);font-weight:750;line-height:1.08;letter-spacing:-.035em;margin:0 0 5px}.intro{color:#454545;margin:0;font-size:14px}.scan-card{position:relative;overflow:hidden;display:grid;place-items:center;min-height:210px;border:2px solid var(--ink);border-radius:20px;background:#101010;color:#fff;text-align:center}.scan-card{cursor:pointer}.scan-card:focus-visible{outline:4px solid #777;outline-offset:3px}.scan-card video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.scan-overlay{position:relative;z-index:1;display:grid;justify-items:center;gap:13px;padding:24px}.scan-overlay svg{width:48px;height:48px}.scan-card.scanning .scan-overlay{background:#0008;border-radius:14px}.scan-hint{font-size:13px;color:#ddd}.primary,.secondary{width:100%;min-height:54px;border-radius:14px;font-weight:700}.primary{margin-top:14px;border:0;background:var(--ink);color:#fff}.primary:disabled{opacity:.6}.secondary{margin-top:10px;border:1px solid #ffffff;border-radius:14px;background:#fffffff2;color:var(--ink);backdrop-filter:blur(10px);box-shadow:0 6px 20px #8a220b18}.manual{display:none;gap:9px;margin-top:12px}.manual.show{display:flex}.manual input{min-width:0;flex:1;height:52px;padding:0 14px;border:1px solid #bcbcbc;border-radius:12px;background:#fff}.manual button{min-width:95px;border:0;border-radius:12px;background:var(--ink);color:#fff;font-weight:700}.message{min-height:22px;margin:10px 2px 0;padding:8px 11px;border:1px solid #ffffff99;border-radius:11px;background:#fffffff2;color:var(--muted);font-size:13px;backdrop-filter:blur(8px)}.message.error{color:var(--error)}.message.success{color:var(--ok)}.player{display:none;margin-top:20px;padding:19px;border:1px solid var(--line);border-radius:18px;background:var(--white)}.player.show{display:block}.player-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.player h2{margin:0;font-size:22px;letter-spacing:-.025em}.team{margin:3px 0 0;color:var(--muted)}.tag{white-space:nowrap;padding:6px 9px;border:1px solid var(--line);border-radius:99px;font-size:12px}.details{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.detail{padding:11px;background:var(--paper);border-radius:11px}.detail small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}.detail strong{display:block;margin-top:3px}.verify{width:100%;min-height:52px;border:0;border-radius:13px;background:var(--ink);color:white;font-weight:750}.verify:disabled{background:#d8d8d8;color:#555;cursor:default}.section{margin-top:24px;padding:14px;border:1px solid #ffffffb8;border-radius:19px;background:#fffffff2;backdrop-filter:blur(12px);box-shadow:0 12px 28px #8a220b20}.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:11px}.section h2{font-size:19px;font-weight:700;letter-spacing:-.02em;margin:0}.section-head span{font-size:12px;color:var(--muted)}.table-wrap{overflow:hidden;border:1px solid var(--line);border-radius:15px;background:#fff}.records{width:100%;border-collapse:collapse;text-align:left;font-size:13px}.records th{padding:11px 10px;color:var(--muted);font-size:10px;letter-spacing:.07em;text-transform:uppercase;background:#f0f0f0}.records td{padding:12px 10px;border-top:1px solid #ededed}.records td:first-child{font-weight:650}.records .empty{text-align:center;padding:22px;color:var(--muted)}.records tbody tr.verified-row{animation:verifiedGlow 1.2s ease-out;background:#e6f6e9}@keyframes verifiedGlow{0%{background:#83d694}100%{background:#e6f6e9}}.player.verified{border-color:#72b982;background:#edf8ef;box-shadow:0 0 0 3px #d9f0dd}.payment{font-size:11px;white-space:nowrap}.payment.paid{color:var(--ok)}.payment.unpaid{color:var(--error)}.foot{margin:12px 2px 0;color:#575757;font-size:11px}.hidden{display:none!important}@media(max-width:640px){body{background-attachment:scroll;background-position:center top}}@media(max-width:380px){.shell{padding-left:14px;padding-right:14px}.records{font-size:12px}.records th,.records td{padding-left:7px;padding-right:7px}.scan-card{min-height:190px}}
+.top{position:relative}.top-left{position:relative;display:flex;align-items:center;gap:10px}.menu-toggle{display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid #111;border-radius:11px;background:#fff;color:#111}.menu-toggle svg{width:19px;height:19px}.menu-dropdown{position:absolute;z-index:30;top:calc(100% + 9px);left:0;display:none;min-width:205px;padding:7px;border:1px solid #ddd;border-radius:14px;background:#fffffff5;box-shadow:0 12px 30px #0003;backdrop-filter:blur(12px)}.menu-dropdown.open{display:grid;gap:4px}.menu-item{width:100%;padding:11px 12px;border:0;border-radius:9px;background:transparent;color:var(--ink);text-align:left;font-weight:650}.menu-item:hover,.menu-item:focus-visible{background:#f0f0f0}.view{display:none}.view.active{display:block}.recent-preview{margin-top:24px}.modal-backdrop{position:fixed;z-index:100;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:#10101099;backdrop-filter:blur(7px)}.modal-backdrop.show{display:flex}.modal-card{width:min(100%,440px);max-height:min(90svh,720px);overflow:auto;padding:22px;border:1px solid #ffffffb8;border-radius:22px;background:#fffffff5;box-shadow:0 24px 80px #0005}.player.modal-card{display:none;margin:0}.player.modal-card.show{display:block}.modal-top{display:flex;justify-content:space-between;align-items:start;gap:12px}.modal-top h2{margin:0;font-size:23px;letter-spacing:-.03em}.modal-close{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border:1px solid #ddd;border-radius:50%;background:#fff;color:#111;font-size:22px;line-height:1}.modal-subtitle{margin:4px 0 0;color:var(--muted)}.player-data{display:grid;gap:10px;margin:19px 0}.player-data .detail{padding:12px 13px}.player-data strong{overflow-wrap:anywhere}.modal-actions{display:grid;gap:9px}.modal-actions .verify{margin:0}.modal-actions .secondary{margin:0}.error-card{text-align:center}.sad-face{font-size:54px;line-height:1;margin:2px 0 12px}.error-card h2{margin:0;font-size:23px;letter-spacing:-.03em}.error-card p{margin:8px 0 18px;color:#4c4c4c}.registry-table{min-width:510px}.registry-scroll{overflow:auto}@media(max-width:380px){.brand{font-size:14px}.top{padding-left:10px;padding-right:10px}.modal-card{padding:18px}.registry-table{min-width:470px}}
 </style>
 </head>
 <body>
 <main class="shell">
-  <header class="top"><div class="brand">Control del torneo</div><div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Conexión pendiente</span></div></header>
+  <header class="top"><div class="top-left"><button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="brand">Control del torneo</div><nav class="menu-dropdown" id="menuDropdown" aria-label="Secciones"><button class="menu-item" type="button" data-view="registry">Registro completo</button><button class="menu-item" type="button" data-view="scanner">Escáner</button></nav></div><div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Conexión pendiente</span></div></header>
+  <section id="scannerView" class="view active">
   <section class="hero"><h1>Registro de asistencia</h1><p class="intro">Escanea el código del jugador para consultar su registro.</p></section>
   <section aria-label="Escáner de códigos">
     <div class="scan-card" id="scanCard" role="button" tabindex="0" aria-label="Tocar para abrir o cerrar el escáner">
@@ -25,56 +27,124 @@
     <form class="manual" id="manualForm"><input id="codeInput" autocomplete="off" autocapitalize="characters" placeholder="Código del jugador" aria-label="Código del jugador"><button type="submit">Buscar</button></form>
     <p class="message" id="message" role="status" aria-live="polite">Conecta el Excel para empezar a verificar jugadores.</p>
   </section>
-  <section class="player" id="playerCard" aria-live="polite"></section>
+
   <section class="section" aria-labelledby="recentTitle">
-    <div class="section-head"><h2 id="recentTitle">Últimos registros</h2><span id="recordCount">0 registros</span></div>
+    <div class="section-head"><h2 id="recentTitle">Últimos 5 registros</h2><span id="recordCount">0 registros</span></div>
     <div class="table-wrap"><table class="records"><thead><tr><th>Jugador</th><th>Equipo</th><th>Hora</th></tr></thead><tbody id="recentRows"><tr><td colspan="3" class="empty">Aquí aparecerán las asistencias confirmadas.</td></tr></tbody></table></div>
-    <p class="foot">El historial se guardará junto con el Excel cuando se configure la conexión.</p>
+    <p class="foot">Los registros verificados se guardan en este dispositivo.</p>
   </section>
+</section>
+<section id="registryView" class="view" aria-labelledby="registryTitle">
+  <section class="hero"><h1 id="registryTitle">Registro completo</h1><p class="intro">Todos los códigos verificados desde este dispositivo.</p></section>
+  <section class="section">
+    <div class="section-head"><h2>Verificaciones</h2><span id="allRecordCount">0 registros</span></div>
+    <div class="table-wrap registry-scroll"><table class="records registry-table"><thead><tr><th>Jugador</th><th>Equipo</th><th>Código</th><th>Hora</th><th>Estado</th></tr></thead><tbody id="allRows"><tr><td colspan="5" class="empty">Todavía no hay códigos verificados.</td></tr></tbody></table></div>
+    <p class="foot">Este historial es local y solo aparece en este navegador.</p>
+  </section>
+</section>
 </main>
+<div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+  <section class="player modal-card" id="playerCard" aria-live="polite"></section>
+  <section class="modal-card error-card hidden" id="errorCard" role="alertdialog" aria-modal="true" aria-labelledby="errorTitle">
+    <div class="sad-face" aria-hidden="true">☹</div>
+    <h2 id="errorTitle">Código no válido</h2>
+    <p id="errorText">No encontramos ese código. Revísalo y vuelve a introducirlo.</p>
+    <div class="modal-actions"><button class="verify" id="errorRetry" type="button">Volver a introducir el código</button><button class="secondary" id="errorClose" type="button">Cerrar</button></div>
+  </section>
+</div>
 <script>
-// El sitio de GitHub Pages necesitará un servicio privado para consultar el Excel.
-// Define window.TOURNAMENT_API antes de este script cuando exista ese servicio.
 const API = window.TOURNAMENT_API || "";
+const HISTORY_KEY = "torneo-verificaciones-v1";
 const $ = (id) => document.getElementById(id);
 const camera = $("camera"), card = $("scanCard"), message = $("message");
+const menu = $("menuDropdown"), menuToggle = $("menuToggle"), modal = $("modalBackdrop");
 let stream = null, detector = null, scanFrame = 0, currentPlayer = null;
-function setMessage(text, kind=""){ message.textContent=text; message.className=`message ${kind}`; }
+
+function setMessage(text, kind=""){ message.textContent=text; message.className="message " + kind; }
 function setConnection(ready){ $("statusDot").classList.toggle("ready",ready); $("statusText").textContent=ready?"Excel conectado":"Conexión pendiente"; }
-setConnection(Boolean(API));
+function getHistory(){ try { const rows=JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]"); return Array.isArray(rows)?rows:[]; } catch { return []; } }
+function saveHistory(rows){ try { localStorage.setItem(HISTORY_KEY,JSON.stringify(rows)); } catch { setMessage("El navegador no pudo guardar el historial local.","error"); } }
+
+function openMenu(){menu.classList.add("open");menuToggle.setAttribute("aria-expanded","true");menuToggle.setAttribute("aria-label","Cerrar menú");}
+function closeMenu(){menu.classList.remove("open");menuToggle.setAttribute("aria-expanded","false");menuToggle.setAttribute("aria-label","Abrir menú");}
+menuToggle.addEventListener("click",()=>menu.classList.contains("open")?closeMenu():openMenu());
+document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>{const view=button.dataset.view;$("scannerView").classList.toggle("active",view==="scanner");$("registryView").classList.toggle("active",view==="registry");closeMenu();if(view==="scanner")renderRecent();else renderAll();window.scrollTo({top:0,behavior:"smooth"});}));
+document.addEventListener("click",event=>{if(!event.target.closest(".top-left"))closeMenu();});
+document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeModal();closeMenu();}});
 $("manualButton").addEventListener("click",()=>{const form=$("manualForm");form.classList.toggle("show");if(form.classList.contains("show"))$("codeInput").focus();});
-$("manualForm").addEventListener("submit",async e=>{e.preventDefault();const code=$("codeInput").value.trim();if(code)await lookup(code);});
+$("manualForm").addEventListener("submit",async event=>{event.preventDefault();const code=$("codeInput").value.trim();if(code)await lookup(code);});
 card.addEventListener("click",()=>{if(stream)stopCamera();else startCamera();});
-card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();if(stream)stopCamera();else startCamera();}});
+card.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();if(stream)stopCamera();else startCamera();}});
+$("errorRetry").addEventListener("click",()=>{closeModal();$("manualForm").classList.add("show");$("codeInput").value="";$("codeInput").focus();});
+$("errorClose").addEventListener("click",closeModal);
+modal.addEventListener("click",event=>{if(event.target===modal)closeModal();});
+function openModal(type){modal.classList.add("show");modal.setAttribute("aria-hidden","false");$("playerCard").classList.toggle("show",type==="player");$("errorCard").classList.toggle("hidden",type!=="error");}
+function closeModal(){modal.classList.remove("show");modal.setAttribute("aria-hidden","true");$("playerCard").classList.remove("show");$("errorCard").classList.add("hidden");}
+function showError(title,text){$("errorTitle").textContent=title;$("errorText").textContent=text;openModal("error");}
+
 async function startCamera(){
   if(!navigator.mediaDevices?.getUserMedia){setMessage("Este navegador no permite usar la cámara. Introduce el código manualmente.","error");return}
   if(!("BarcodeDetector" in window)){setMessage("El escáner no está disponible en este navegador. Introduce el código manualmente.","error");return}
   try{
     const formats=await BarcodeDetector.getSupportedFormats();
-    const wanted=["qr_code","code_128","code_39","ean_13","ean_8","upc_a","upc_e","itf","codabar"].filter(x=>formats.includes(x));
+    const wanted=["qr_code","code_128","code_39","ean_13","ean_8","upc_a","upc_e","itf","codabar"].filter(format=>formats.includes(format));
     detector=new BarcodeDetector({formats:wanted});
     stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:"environment"}}});
     camera.srcObject=stream;await camera.play();camera.classList.remove("hidden");card.classList.add("scanning");$("scanTitle").textContent="Apunta al código";$("scanHint").textContent="Toca para cerrar la cámara";setMessage("Buscando código…");scanFrame=requestAnimationFrame(scan);
-  }catch(err){stopCamera();setMessage(err.name==="NotAllowedError"?"Permite el acceso a la cámara o introduce el código manualmente.":"No se pudo iniciar la cámara. Puedes introducir el código manualmente.","error");}
+  }catch(error){stopCamera();setMessage(error.name==="NotAllowedError"?"Permite el acceso a la cámara o introduce el código manualmente.":"No se pudo iniciar la cámara. Puedes introducir el código manualmente.","error");}
 }
 async function scan(){if(!stream||!detector)return;try{const found=await detector.detect(camera);if(found.length&&found[0].rawValue){const value=found[0].rawValue;stopCamera();await lookup(value);return}}catch{}scanFrame=requestAnimationFrame(scan)}
-function stopCamera(){if(scanFrame)cancelAnimationFrame(scanFrame);scanFrame=0;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;camera.srcObject=null;camera.classList.add("hidden");card.classList.remove("scanning");$("scanTitle").textContent="Escanea un código";$("scanHint").textContent="QR o código de barras"}
+function stopCamera(){if(scanFrame)cancelAnimationFrame(scanFrame);scanFrame=0;if(stream)stream.getTracks().forEach(track=>track.stop());stream=null;camera.srcObject=null;camera.classList.add("hidden");card.classList.remove("scanning");$("scanTitle").textContent="Escanea un código";$("scanHint").textContent="QR o código de barras"}
+
 async function lookup(code){
-  currentPlayer=null;$("playerCard").classList.remove("show");setMessage("Buscando jugador…");
-  if(!API){setMessage("La interfaz está lista. Falta conectar el servicio que consulta el Excel.","error");return}
-  try{const res=await fetch(`${API.replace(/\/$/,"")}/players/${encodeURIComponent(code)}`,{credentials:"include"});if(res.status===404){setMessage("No encontramos un jugador con ese código.","error");return}if(!res.ok)throw new Error();currentPlayer=await res.json();renderPlayer(currentPlayer);setMessage("Jugador encontrado. Comprueba los datos antes de confirmar.","success");}
-  catch{setMessage("No se pudo consultar el Excel. Comprueba la conexión e inténtalo de nuevo.","error");}
+  currentPlayer=null;setMessage("Buscando código en el Excel…");
+  if(!API){showError("Conexión pendiente","La web todavía no tiene permiso de lectura para consultar el Excel.");setMessage("Falta conectar la lectura del Excel.","error");return}
+  try{
+    const response=await fetch(API.replace(/\/$/,"")+"/players/"+encodeURIComponent(code),{credentials:"include"});
+    if(response.status===404){showError("Código no encontrado","No encontramos «"+code+"». Comprueba el código y vuelve a introducirlo.");setMessage("Código no encontrado.","error");return}
+    if(!response.ok)throw new Error("lookup");
+    const player=await response.json();
+    if(!player||!player.name)throw new Error("invalid-player");
+    player.code=player.code||code;
+    player.verified=getHistory().some(record=>String(record.code).toUpperCase()===String(player.code).toUpperCase());
+    currentPlayer=player;renderPlayer(player);openModal("player");setMessage("Código válido. Comprueba el nombre y el equipo.","success");
+  }catch{setMessage("No se pudo consultar el Excel. Comprueba la conexión e inténtalo de nuevo.","error");}
 }
-function renderPlayer(p){const attended=Boolean(p.attended);$("playerCard").innerHTML=`<div class="player-head"><div><h2>${escapeHtml(p.name)}</h2><p class="team">${escapeHtml(p.team||"Sin equipo")}</p></div><span class="tag">${attended?"Ya asistió":"Pendiente"}</span></div><div class="details"><div class="detail"><small>Pago</small><strong class="payment ${p.paid?"paid":"unpaid"}">${p.paid?"Pagado":"Pendiente"}</strong></div><div class="detail"><small>Asistencia</small><strong>${attended?"Confirmada":"Sin confirmar"}</strong></div></div><button class="verify" id="verifyButton" ${attended?"disabled":""}>${attended?"Asistencia confirmada":"Confirmar asistencia"}</button>`;$("playerCard").classList.add("show");$("playerCard").classList.toggle("verified",attended);const b=$("verifyButton");if(!attended)b.addEventListener("click",()=>verify(p));}
-async function verify(p){const b=$("verifyButton");b.disabled=true;b.textContent="Guardando…";try{const res=await fetch(`${API.replace(/\/$/,"")}/attendance`,{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({code:p.code})});if(!res.ok)throw new Error();p.attended=true;renderPlayer(p);setMessage("Asistencia registrada.","success");await loadRecent();}catch{b.disabled=false;b.textContent="Confirmar asistencia";setMessage("No se pudo guardar la asistencia. Inténtalo de nuevo.","error");}}
-async function loadRecent(){if(!API)return;try{const res=await fetch(`${API.replace(/\/$/,"")}/attendance/recent?limit=10`,{credentials:"include"});if(!res.ok)return;const rows=await res.json();renderRecent(rows);}catch{}}
-function renderRecent(rows){const body=$("recentRows");$("recordCount").textContent=`${rows.length} ${rows.length===1?"registro":"registros"}`;if(!rows.length){body.innerHTML='<tr><td colspan="3" class="empty">Todavía no hay asistencias confirmadas.</td></tr>';return}body.innerHTML=rows.map(r=>`<tr class="verified-row"><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.team||"—")}</td><td>${escapeHtml(formatTime(r.timestamp))}</td></tr>`).join("")}
-function formatTime(value){const d=new Date(value);return Number.isNaN(d.getTime())?"—":new Intl.DateTimeFormat("es-ES",{hour:"2-digit",minute:"2-digit"}).format(d)}
-function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-if(API)loadRecent();
+function renderPlayer(player){
+  const verified=Boolean(player.verified)||getHistory().some(record=>String(record.code).toUpperCase()===String(player.code).toUpperCase());
+  $("playerCard").innerHTML='<div class="modal-top"><div><h2>'+escapeHtml(player.name)+'</h2><p class="modal-subtitle">'+escapeHtml(player.team||"Sin equipo")+'</p></div><button class="modal-close" id="playerClose" type="button" aria-label="Cerrar">×</button></div><div class="player-data"><div class="detail"><small>Nombre</small><strong>'+escapeHtml(player.name)+'</strong></div><div class="detail"><small>Equipo</small><strong>'+escapeHtml(player.team||"Sin equipo")+'</strong></div><div class="detail"><small>Código</small><strong>'+escapeHtml(player.code)+'</strong></div></div><div class="modal-actions"><button class="verify" id="verifyButton" '+(verified?"disabled":"")+'>'+(verified?"Ya verificado en esta web":"Confirmar verificación")+'</button></div>';
+  $("playerCard").classList.toggle("verified",verified);
+  $("playerClose").addEventListener("click",closeModal);
+  const button=$("verifyButton");if(!verified)button.addEventListener("click",()=>verifyPlayer(player));
+}
+function verifyPlayer(player){
+  const history=getHistory();
+  if(history.some(record=>String(record.code).toUpperCase()===String(player.code).toUpperCase())){player.verified=true;renderPlayer(player);return}
+  history.unshift({code:String(player.code),name:String(player.name),team:String(player.team||""),timestamp:new Date().toISOString()});
+  saveHistory(history);player.verified=true;renderPlayer(player);renderRecent();renderAll();
+  setMessage("Verificación guardada en este navegador. El Excel no se ha modificado.","success");
+}
+function renderRecent(){
+  const all=getHistory(),rows=all.slice(0,5),body=$("recentRows");
+  $("recordCount").textContent=all.length+" verificados";
+  if(!rows.length){body.innerHTML='<tr><td colspan="3" class="empty">Aquí aparecerán los códigos verificados.</td></tr>';return}
+  body.innerHTML=rows.map(record=>'<tr class="verified-row"><td>'+escapeHtml(record.name)+'</td><td>'+escapeHtml(record.team||"—")+'</td><td>'+escapeHtml(formatTime(record.timestamp))+'</td></tr>').join("");
+}
+function renderAll(){
+  const rows=getHistory(),body=$("allRows");
+  $("allRecordCount").textContent=rows.length+" "+(rows.length===1?"registro":"registros");
+  if(!rows.length){body.innerHTML='<tr><td colspan="5" class="empty">Todavía no hay códigos verificados.</td></tr>';return}
+  body.innerHTML=rows.map(record=>'<tr class="verified-row"><td>'+escapeHtml(record.name)+'</td><td>'+escapeHtml(record.team||"—")+'</td><td>'+escapeHtml(record.code)+'</td><td>'+escapeHtml(formatDateTime(record.timestamp))+'</td><td>Verificado</td></tr>').join("");
+}
+function formatTime(value){const date=new Date(value);return Number.isNaN(date.getTime())?"—":new Intl.DateTimeFormat("es-ES",{hour:"2-digit",minute:"2-digit"}).format(date)}
+function formatDateTime(value){const date=new Date(value);return Number.isNaN(date.getTime())?"—":new Intl.DateTimeFormat("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(date)}
+function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]))}
+setConnection(Boolean(API));renderRecent();renderAll();
 </script>
 </body>
 </html>
+
+
 
 
 
