@@ -103,10 +103,10 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
 <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
   <section class="player modal-card" id="playerCard" role="dialog" aria-modal="true" aria-labelledby="playerModalTitle" tabindex="-1" aria-live="polite"></section>
   <section class="modal-card error-card hidden" id="errorCard" role="alertdialog" aria-modal="true" aria-labelledby="errorTitle">
-    <div class="sad-face" aria-hidden="true">☹</div>
+    <div class="sad-face" id="errorIcon" aria-hidden="true">☹</div>
     <h2 id="errorTitle">Código no válido</h2>
     <p id="errorText">No encontramos ese código. Revísalo y vuelve a introducirlo.</p>
-    <div class="modal-actions"><button class="verify" id="errorRetry" type="button">Volver a introducir el código</button><button class="secondary" id="errorClose" type="button">Cerrar</button></div>
+    <div class="modal-actions"><button class="verify" id="errorRetry" type="button">Volver a introducir el código</button><button class="verify hidden" id="errorAddCsvButton" type="button">Añadir archivo CSV</button><button class="secondary" id="errorClose" type="button">Cerrar</button></div>
   </section>
 </div>
 <div class="reset-confirm" id="resetConfirm" aria-hidden="true">
@@ -166,12 +166,14 @@ $("manualForm").addEventListener("submit",async event=>{event.preventDefault();c
 card.addEventListener("click",()=>{if(stream||cameraStarting)stopCamera();else startCamera();});
 card.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();if(stream||cameraStarting)stopCamera();else startCamera();}});
 $("errorRetry").addEventListener("click",()=>{closeModal();$("manualForm").classList.add("show");$("codeInput").value="";$("codeInput").focus();});
+$("errorAddCsvButton").addEventListener("click",()=>{closeModal();$("csvInput").click();});
 $("errorClose").addEventListener("click",closeModal);
 modal.addEventListener("click",event=>{if(event.target===modal)closeModal();});
 modal.addEventListener("keydown",event=>{if(event.key!=="Tab")return;const controls=[...modal.querySelectorAll("button:not([disabled]),input:not([disabled]),[href],[tabindex]:not([tabindex='-1'])")].filter(element=>element.offsetParent!==null);if(!controls.length){event.preventDefault();return}const first=controls[0],last=controls[controls.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});
 function openModal(type){if(!modal.classList.contains("show"))modalReturnFocus=document.activeElement;modal.classList.add("show");modal.setAttribute("aria-hidden","false");const playerCard=$("playerCard"),errorCard=$("errorCard");playerCard.classList.toggle("show",type==="player");errorCard.classList.toggle("hidden",type!=="error");requestAnimationFrame(()=>{if(!modal.classList.contains("show"))return;const activeCard=type==="player"?playerCard:errorCard;(activeCard.querySelector("button:not([disabled])")||activeCard).focus()});}
 function closeModal(){modal.classList.remove("show");modal.setAttribute("aria-hidden","true");$("playerCard").classList.remove("show");$("errorCard").classList.add("hidden");if(modalReturnFocus?.isConnected)modalReturnFocus.focus();modalReturnFocus=null;}
-function showError(title,text){$("errorTitle").textContent=title;$("errorText").textContent=text;openModal("error");}
+function showError(title,text){$("errorIcon").textContent="☹";$("errorTitle").textContent=title;$("errorText").textContent=text;$("errorRetry").classList.remove("hidden");$("errorAddCsvButton").classList.add("hidden");openModal("error");}
+function showCsvWarning(){$("errorIcon").textContent="⚠️";$("errorTitle").textContent="Falta cargar el CSV";$("errorText").textContent="Antes de abrir la cámara, añade el archivo CSV con la lista de jugadores.";$("errorRetry").classList.add("hidden");$("errorAddCsvButton").classList.remove("hidden");openModal("error");}
 
 function loadZXing(){if(window.ZXingBrowser?.BrowserMultiFormatReader)return Promise.resolve(window.ZXingBrowser);if(!zxingLoadPromise){zxingLoadPromise=new Promise((resolve,reject)=>{const script=document.createElement("script");script.src="https://unpkg.com/@zxing/browser@0.2.1";script.async=true;script.onload=()=>{if(window.ZXingBrowser?.BrowserMultiFormatReader)resolve(window.ZXingBrowser);else{zxingLoadPromise=null;reject(new Error("No se pudo cargar el lector alternativo."))}};script.onerror=()=>{zxingLoadPromise=null;reject(new Error("No se pudo cargar el lector alternativo."))};document.head.appendChild(script)})}return zxingLoadPromise}
 function loadTesseract(){if(window.Tesseract?.createWorker)return Promise.resolve(window.Tesseract);if(!ocrLoadPromise){ocrLoadPromise=new Promise((resolve,reject)=>{const script=document.createElement("script");script.src="https://cdn.jsdelivr.net/npm/tesseract.js@7/dist/tesseract.min.js";script.async=true;script.onload=()=>{if(window.Tesseract?.createWorker)resolve(window.Tesseract);else{ocrLoadPromise=null;reject(new Error("No se pudo cargar el lector de texto."))}};script.onerror=()=>{ocrLoadPromise=null;reject(new Error("No se pudo cargar el lector de texto."))};document.head.appendChild(script)})}return ocrLoadPromise}
@@ -191,7 +193,7 @@ async function startZXingFallback(requestId){
 }
 async function startCamera(){
   if(stream||cameraStarting)return;
-  if(!csvPlayers.length){setMessage("Antes de abrir la cámara, sube el archivo CSV desde el menú.","error");return}
+  if(!csvPlayers.length){setMessage("Antes de abrir la cámara, añade el archivo CSV.","error");showCsvWarning();return}
   if(!navigator.mediaDevices?.getUserMedia){setMessage("Este navegador no permite usar la cámara. Introduce el código manualmente.","error");return}
   cameraStarting=true;card.setAttribute("aria-pressed","true");const requestId=++cameraRequestId;let pendingStream=null;detector=null;
   try{
