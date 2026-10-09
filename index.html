@@ -173,11 +173,11 @@ async function startCamera(){
   if(!navigator.mediaDevices?.getUserMedia){setMessage("Este navegador no permite usar la cámara. Introduce el código manualmente.","error");return}
   if(!("BarcodeDetector" in window)){setMessage("El escáner no está disponible en este navegador. Introduce el código manualmente.","error");return}
   try{
-    card.classList.add("scanning");$("scanTitle").textContent="Conectando con la cámara…";$("scanHint").textContent="Permite el acceso si el navegador lo solicita";setMessage("Abriendo cámara…");const [formats,mediaStream]=await Promise.all([BarcodeDetector.getSupportedFormats(),navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:"environment"}}})]);
+    $("scanTitle").textContent="Conectando con la cámara…";$("scanHint").textContent="Permite el acceso si el navegador lo solicita";setMessage("Abriendo cámara…");const [formats,mediaStream]=await Promise.all([BarcodeDetector.getSupportedFormats(),navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:"environment"}}})]);
     const wanted=["qr_code","code_128","code_39","ean_13","ean_8","upc_a","upc_e","itf","codabar"].filter(format=>formats.includes(format));
     detector=new BarcodeDetector({formats:wanted});
     stream=mediaStream;
-    camera.srcObject=stream;await camera.play();camera.classList.remove("hidden");$("scanTitle").textContent="Apunta al código";$("scanHint").textContent="Toca para cerrar la cámara";setMessage("Buscando código…");scanFrame=requestAnimationFrame(scan);
+    camera.srcObject=stream;await camera.play();camera.classList.remove("hidden");card.classList.add("scanning");$("scanTitle").textContent="Apunta al código";$("scanHint").textContent="Toca para cerrar la cámara";setMessage("Buscando código…");scanFrame=requestAnimationFrame(scan);
   }catch(error){stopCamera();setMessage(error.name==="NotAllowedError"?"Permite el acceso a la cámara o introduce el código manualmente.":"No se pudo iniciar la cámara. Puedes introducir el código manualmente.","error");}
 }
 async function scan(){if(!stream||!detector)return;try{const found=await detector.detect(camera);if(found.length&&found[0].rawValue){const value=found[0].rawValue;stopCamera();await lookup(value);return}}catch{}scanFrame=requestAnimationFrame(scan)}
