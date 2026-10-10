@@ -42,7 +42,7 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
   body.animations-enabled .background-video{opacity:.32}
   body.animations-enabled .login-gate{background:transparent}
   body.animations-enabled::before,body.animations-enabled::after,body.animations-enabled .login-gate::before,body.animations-enabled .login-gate::after{display:none!important}
-  body.no-animations .background-video{opacity:.32!important}
+  body.no-animations .background-video{opacity:0!important;visibility:hidden!important}
   .login-gate.leaving{pointer-events:none;animation:gateUnfold .62s cubic-bezier(.2,.75,.25,1) both}
   #appShell.unfolding .top,#appShell.unfolding .view.active>.hero,#appShell.unfolding #scanCard,#appShell.unfolding #manualButton,#appShell.unfolding #manualForm,#appShell.unfolding #message,#appShell.unfolding .section,#appShell.unfolding #resetFooter{animation:contentUnfold .48s cubic-bezier(.18,.75,.25,1) both}
   #appShell.unfolding .top{animation-delay:.04s}
@@ -65,13 +65,15 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
   .no-animations .scan-card.scanning::after{display:none!important}.scan-card.scanning video{display:block!important;visibility:visible;opacity:1}.no-animations #successFlash.play{animation:greenFlash .72s ease-out both!important}
   #allRows tr.verified-row td{background:#a9e5b5;color:#123d1e}#allRows tr:not(.verified-row) td:not(.empty){background:#f5cccc;color:#741d1d}.attendance-status.attended{background:#8fdba0;color:#104c25}.attendance-status.pending{background:#efaaaa;color:#741d1d}
   #allRows tr.attended-row td{background:#a9e5b5!important;color:#123d1e}#allRows tr.pending-row td:not(.empty){background:#f2bcbc!important;color:#741d1d}#scanCard.scanning::after{content:none!important;display:none!important}.scan-card.scanning video{display:block!important;visibility:visible;opacity:1;z-index:1}.scan-card.scanning .scan-overlay{z-index:2}
+  body.no-animations{background-color:#f35b11;background-image:url("fondo-torneo.png");background-position:center;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}body.no-animations .background-video{opacity:0!important;visibility:hidden!important}
+  .login-brand{display:block;width:min(100%,185px);height:132px;object-fit:contain;margin:0 auto 8px}.brand-lockup{display:flex;align-items:center;gap:8px;min-width:0}.brand-logo{width:56px;height:42px;object-fit:contain;flex:0 0 auto}@media(max-width:380px){.brand-logo{width:40px;height:32px}.brand{font-size:12px}}
   </style>
 </head>
 <body>
 <video class="background-video" id="backgroundVideo" muted playsinline loop preload="none" poster="fondo-torneo.png" aria-hidden="true"><source src="fondo-animado.mp4" type="video/mp4"></video>
-<section class="login-gate" id="loginGate" aria-labelledby="loginTitle"><form class="login-card" id="loginForm"><h1 id="loginTitle">Control del torneo</h1><p>Introduce la contraseña para entrar.</p><input id="passwordInput" type="password" autocomplete="current-password" placeholder="Contraseña" aria-label="Contraseña" required><button class="primary" type="submit">Entrar</button><button class="secondary motion-toggle" id="animationToggle" type="button" aria-pressed="true" data-water-frozen="false"><span id="animationToggleLabel">Animaciones activadas</span></button><button class="secondary reset-button" id="resetRecordsLoginButton" type="button">⚠️ Reiniciar registros</button><div class="login-error" id="loginError" role="alert" aria-live="polite"></div><div class="login-reset-message" id="loginResetMessage" role="status" aria-live="polite"></div></form></section>
+<section class="login-gate" id="loginGate" aria-labelledby="loginTitle"><form class="login-card" id="loginForm"><img class="login-brand" src="showcast-logo.png" alt="ShowCast"><h1 id="loginTitle">Control del torneo</h1><p>Introduce la contraseña para entrar.</p><input id="passwordInput" type="password" autocomplete="current-password" placeholder="Contraseña" aria-label="Contraseña" required><button class="primary" type="submit">Entrar</button><button class="secondary motion-toggle" id="animationToggle" type="button" aria-pressed="true" data-water-frozen="false"><span id="animationToggleLabel">Animaciones activadas</span></button><button class="secondary reset-button" id="resetRecordsLoginButton" type="button">⚠️ Reiniciar registros</button><div class="login-error" id="loginError" role="alert" aria-live="polite"></div><div class="login-reset-message" id="loginResetMessage" role="status" aria-live="polite"></div></form></section>
 <main class="shell hidden" id="appShell">
-  <header class="top"><div class="top-left"><button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="brand">Control del torneo</div><nav class="menu-dropdown" id="menuDropdown" aria-label="Secciones"><button class="menu-item" type="button" data-view="registry">Registro completo</button><button class="menu-item" type="button" data-view="scanner">Escáner</button><button class="menu-item" type="button" id="addCsvButton">Añadir CSV</button></nav></div><div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Carga un CSV</span></div></header>
+  <header class="top"><div class="top-left"><button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="brand-lockup"><img class="brand-logo" src="showcast-logo.png" alt="ShowCast"><div class="brand">Control del torneo</div></div><nav class="menu-dropdown" id="menuDropdown" aria-label="Secciones"><button class="menu-item" type="button" data-view="registry">Registro completo</button><button class="menu-item" type="button" data-view="scanner">Escáner</button><button class="menu-item" type="button" id="addCsvButton">Añadir CSV</button></nav></div><div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Carga un CSV</span></div></header>
   <input id="csvInput" class="hidden" type="file" accept=".csv,text/csv" aria-label="Seleccionar archivo CSV">
   <section id="scannerView" class="view active">
   <section class="hero"><h1>Registro de asistencia</h1><p class="intro">Escanea el código del jugador para consultar su registro.</p></section>
@@ -307,6 +309,9 @@ function parseRosterCsv(text){
 </script>
 </body>
 </html>
+
+
+
 
 
 
