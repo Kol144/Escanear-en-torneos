@@ -62,6 +62,8 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
   .already-verified{margin:18px 0 0;padding:11px 13px;border:1px solid #69ad78;border-radius:12px;background:#dff3e3;color:#145b2a;font-weight:750}
   .attendance-status{display:inline-block;padding:4px 8px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}.attendance-status.attended{background:#dff3e3;color:#145b2a}.attendance-status.pending{background:#f0f0f0;color:#555}
   .recent-card{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}.recent-card:hover{transform:translateY(-2px);box-shadow:0 16px 32px #8a220b2c}.recent-card:focus-visible{outline:4px solid #111;outline-offset:3px}
+  .no-animations .scan-card.scanning::after{display:none!important}.scan-card.scanning video{display:block!important;visibility:visible;opacity:1}.no-animations #successFlash.play{animation:greenFlash .72s ease-out both!important}
+  #allRows tr.verified-row td{background:#a9e5b5;color:#123d1e}#allRows tr:not(.verified-row) td:not(.empty){background:#f5cccc;color:#741d1d}.attendance-status.attended{background:#8fdba0;color:#104c25}.attendance-status.pending{background:#efaaaa;color:#741d1d}
   </style>
 </head>
 <body>
@@ -135,7 +137,7 @@ function readAnimationPreference(){try{const saved=localStorage.getItem(ANIMATIO
 function setBackgroundVideo(playing){if(!backgroundVideo)return;if(backgroundRateFrame){cancelAnimationFrame(backgroundRateFrame);backgroundRateFrame=0}const minimumRate=.0625;if(playing){const from=backgroundVideo.paused?minimumRate:Math.max(minimumRate,backgroundVideo.playbackRate||minimumRate);backgroundVideo.playbackRate=from;try{const request=backgroundVideo.play();if(request?.catch)request.catch(()=>{})}catch{}animateBackgroundRate(from,1,false,minimumRate)}else{if(backgroundVideo.paused)return;const from=Math.max(minimumRate,backgroundVideo.playbackRate||1);animateBackgroundRate(from,0,true,minimumRate)}}
 function animateBackgroundRate(from,to,pauseAtEnd,minimumRate){const started=performance.now();const step=now=>{const progress=Math.min(1,(now-started)/2000),eased=progress*progress*(3-2*progress);backgroundVideo.playbackRate=Math.max(minimumRate,from+(to-from)*eased);if(progress<1){backgroundRateFrame=requestAnimationFrame(step);return}backgroundRateFrame=0;if(pauseAtEnd){backgroundVideo.pause();backgroundVideo.playbackRate=1}};backgroundRateFrame=requestAnimationFrame(step)}
 function setAnimationsEnabled(enabled,freezeWaterAfterDelay=true,deferBackground=false){animationsEnabled=enabled;document.body.classList.toggle("no-animations",!enabled);document.body.classList.toggle("animations-enabled",enabled);const updateBackground=()=>{if(animationsEnabled===enabled)setBackgroundVideo(enabled)};if(deferBackground)window.setTimeout(updateBackground,180);else updateBackground();const button=$("animationToggle");button.setAttribute("aria-pressed",String(enabled));$("animationToggleLabel").textContent=enabled?"Animaciones activadas":"Animaciones desactivadas";if(waterFreezeTimer){window.clearTimeout(waterFreezeTimer);waterFreezeTimer=0}if(enabled){button.dataset.waterFrozen="false"}else if(freezeWaterAfterDelay){button.dataset.waterFrozen="false";waterFreezeTimer=window.setTimeout(()=>{if(!animationsEnabled)button.dataset.waterFrozen="true";waterFreezeTimer=0},1000)}else{button.dataset.waterFrozen="true"}try{localStorage.setItem(ANIMATIONS_KEY,String(enabled))}catch{}}
-function playGreenPulse(){if(!animationsEnabled)return;const flash=$("successFlash");flash.classList.remove("play");void flash.offsetWidth;flash.classList.add("play");window.setTimeout(()=>flash.classList.remove("play"),750)}
+function playGreenPulse(){const flash=$("successFlash");flash.classList.remove("play");void flash.offsetWidth;flash.classList.add("play");window.setTimeout(()=>flash.classList.remove("play"),750)}
 setAnimationsEnabled(animationsEnabled,false,true);
 try{if(sessionStorage.getItem(SESSION_KEY)==="true"){$("loginGate").classList.add("hidden");$("appShell").classList.remove("hidden")}}catch{}
 
@@ -304,6 +306,9 @@ function parseRosterCsv(text){
 </script>
 </body>
 </html>
+
+
+
 
 
 
