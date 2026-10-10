@@ -64,6 +64,7 @@ body::before{z-index:0;opacity:.9;mix-blend-mode:soft-light;filter:blur(25px);an
   .recent-card{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}.recent-card:hover{transform:translateY(-2px);box-shadow:0 16px 32px #8a220b2c}.recent-card:focus-visible{outline:4px solid #111;outline-offset:3px}
   .no-animations .scan-card.scanning::after{display:none!important}.scan-card.scanning video{display:block!important;visibility:visible;opacity:1}.no-animations #successFlash.play{animation:greenFlash .72s ease-out both!important}
   #allRows tr.verified-row td{background:#a9e5b5;color:#123d1e}#allRows tr:not(.verified-row) td:not(.empty){background:#f5cccc;color:#741d1d}.attendance-status.attended{background:#8fdba0;color:#104c25}.attendance-status.pending{background:#efaaaa;color:#741d1d}
+  #allRows tr.attended-row td{background:#a9e5b5!important;color:#123d1e}#allRows tr.pending-row td:not(.empty){background:#f2bcbc!important;color:#741d1d}#scanCard.scanning::after{content:none!important;display:none!important}.scan-card.scanning video{display:block!important;visibility:visible;opacity:1;z-index:1}.scan-card.scanning .scan-overlay{z-index:2}
   </style>
 </head>
 <body>
@@ -216,7 +217,7 @@ async function startCamera(){
     if(requestId!==cameraRequestId){mediaStream.getTracks().forEach(track=>track.stop());pendingStream=null;return}
     stream=mediaStream;pendingStream=null;const videoTrack=stream.getVideoTracks()[0];try{const capabilities=videoTrack?.getCapabilities?.(),advanced=[];if(capabilities?.zoom){advanced.push({zoom:Math.min(capabilities.zoom.max??1,Math.max(capabilities.zoom.min??1,1))})}if(capabilities?.focusMode?.includes("continuous"))advanced.push({focusMode:"continuous"});if(advanced.length)await videoTrack.applyConstraints({advanced})}catch{}
     if(requestId!==cameraRequestId){stopCamera();return}
-    camera.srcObject=stream;camera.classList.remove("hidden");if(camera.readyState<1)await new Promise((resolve,reject)=>{const timer=window.setTimeout(()=>reject(new Error("La cámara no ha iniciado el vídeo.")),5000);camera.addEventListener("loadedmetadata",()=>{window.clearTimeout(timer);resolve()},{once:true});camera.addEventListener("error",()=>{window.clearTimeout(timer);reject(new Error("No se pudo mostrar el vídeo de la cámara."))},{once:true})});await camera.play();if(requestId!==cameraRequestId){stopCamera();return}card.classList.add("scanning");$("scanTitle").textContent="Apunta al código";$("scanHint").textContent="En papel o en una pantalla · toca para cerrar";
+    camera.srcObject=stream;camera.autoplay=true;camera.muted=true;camera.playsInline=true;camera.classList.remove("hidden");card.classList.add("scanning");await camera.play();if(camera.readyState<2)await new Promise((resolve,reject)=>{const timer=window.setTimeout(()=>reject(new Error("La cámara no ha entregado imagen.")),8000);const ready=()=>{window.clearTimeout(timer);resolve()};camera.addEventListener("loadeddata",ready,{once:true});camera.addEventListener("canplay",ready,{once:true});camera.addEventListener("error",()=>{window.clearTimeout(timer);reject(new Error("No se pudo mostrar el vídeo de la cámara."))},{once:true})});if(!camera.videoWidth||!camera.videoHeight)throw new Error("La cámara no ha entregado imagen.");if(requestId!==cameraRequestId){stopCamera();return}$("scanTitle").textContent="Apunta al código";$("scanHint").textContent="En papel o en una pantalla · toca para cerrar";
     setMessage("Buscando QR, barras y texto de 5 caracteres… Mantén el código centrado y enfocado; no hace falta que ocupe toda la pantalla.");
     if(detector)scheduleScan();
     startZXingFallback(requestId).catch(()=>{if(requestId===cameraRequestId&&stream)setMessage(detector?"Lector nativo activo. Si no detecta el código, prueba a acercar la cámara o introducirlo manualmente.":"No se pudo cargar el lector alternativo. Comprueba internet o introduce el código manualmente.",detector?"":"error")});
@@ -271,7 +272,7 @@ function renderAll(){
   const rows=csvPlayers.map(player=>{const record=history.find(item=>normalizeCode(item.code)===normalizeCode(player.code));return{name:player.name,team:player.team,code:player.code,timestamp:record?.timestamp||"",attended:Boolean(record)}});
   const attended=rows.filter(player=>player.attended).length;
   $("allRecordCount").textContent=rows.length+" jugadores · "+attended+" asistidos";
-  body.innerHTML=rows.map(player=>'<tr class="'+(player.attended?"verified-row":"")+'"><td>'+escapeHtml(player.name)+'</td><td>'+escapeHtml(player.team||"—")+'</td><td>'+escapeHtml(player.code)+'</td><td>'+escapeHtml(player.timestamp?formatDateTime(player.timestamp):"—")+'</td><td><span class="attendance-status '+(player.attended?"attended":"pending")+'">'+(player.attended?"Asistido":"No asistido")+'</span></td></tr>').join("");
+  body.innerHTML=rows.map(player=>'<tr class="'+(player.attended?"verified-row attended-row":"pending-row")+'"><td>'+escapeHtml(player.name)+'</td><td>'+escapeHtml(player.team||"—")+'</td><td>'+escapeHtml(player.code)+'</td><td>'+escapeHtml(player.timestamp?formatDateTime(player.timestamp):"—")+'</td><td><span class="attendance-status '+(player.attended?"attended":"pending")+'">'+(player.attended?"Asistido":"No asistido")+'</span></td></tr>').join("");
 }
 function formatTime(value){const date=new Date(value);return Number.isNaN(date.getTime())?"—":new Intl.DateTimeFormat("es-ES",{hour:"2-digit",minute:"2-digit"}).format(date)}
 function formatDateTime(value){const date=new Date(value);return Number.isNaN(date.getTime())?"—":new Intl.DateTimeFormat("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(date)}
@@ -306,6 +307,7 @@ function parseRosterCsv(text){
 </script>
 </body>
 </html>
+
 
 
 
